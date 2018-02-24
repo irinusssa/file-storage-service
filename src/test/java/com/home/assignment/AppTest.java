@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.home.assignment.domain.DistributedMachine;
 import com.home.assignment.domain.File;
+import com.home.assignment.domain.FileWithContent;
 import com.home.assignment.service.DistributedMachineAllocator;
 
 public class AppTest {
@@ -21,11 +22,16 @@ public class AppTest {
 
 		String fileName = null;
 		String fileName2 = "9c087d18-f9dd-4470-a4b3-526d08b655fb";
-		allocator.put(fileName2, new File(fileName2));
+		FileWithContent file = new FileWithContent();
+		file.setContent("aaaa".getBytes());
+		file.setFile(new File(fileName2));
+		allocator.put(fileName2, file);
 
 		for (int i = 1; i <= 1000000; i++) {
 			fileName = UUID.randomUUID().toString();
-			allocator.put(fileName, new File(fileName));
+			file = new FileWithContent();
+			file.setFile(new File(fileName));
+			allocator.put(fileName, file);
 		}
 
 		allocator.remove(fileName);
@@ -52,7 +58,7 @@ public class AppTest {
 		assertEquals(allocator.getTotalNbFiles(), sum);
 	}
 
-	@Test
+	 @Test
 	public void testFileNumbering() {
 		DistributedMachine machine;
 		long sum = 0;

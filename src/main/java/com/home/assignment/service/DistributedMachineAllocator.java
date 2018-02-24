@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.home.assignment.domain.DistributedMachine;
 import com.home.assignment.domain.File;
+import com.home.assignment.domain.FileWithContent;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class DistributedMachineAllocator {
 		mask = BigInteger.valueOf(2L).pow(nbBitsMask).intValue() - 1;
 	}
 
-	public File put(String name, File file) {
+	public File put(String name, FileWithContent file) {
 		int hash = name.hashCode();
 		int key = hash & mask;
 		File result = null;
@@ -46,11 +47,11 @@ public class DistributedMachineAllocator {
 		return result;
 	}
 
-	public File get(String name) {
+	public FileWithContent get(String name) {
 		int hash = name.hashCode();
 		int key = hash & mask;
 		DistributedMachine machine = slaves.get(key);
-		File result = null;
+		FileWithContent result = null;
 		if (machine != null) {
 			result = machine.get(name);
 		}
@@ -63,7 +64,7 @@ public class DistributedMachineAllocator {
 		for (Integer hash : slaves.keySet()) {
 			machine = slaves.get(hash);
 			for (String fileName : machine.getFileNames()) {
-				result.add(machine.get(fileName));
+				result.add(machine.get(fileName).getFile());
 			}
 		}
 		return result;
@@ -99,8 +100,8 @@ public class DistributedMachineAllocator {
 		for (Integer hash : slaves.keySet()) {
 			System.out.println(hash);
 			machine = slaves.get(hash);
-			for (String fileName : machine.getFileNames()) {
-				System.out.println("\t" + fileName);
+			for (File file : machine.values()) {
+				System.out.println("\t" + file.getFullPath());
 			}
 		}
 	}

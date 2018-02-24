@@ -2,8 +2,7 @@ package com.home.assignment.domain;
 
 public class File {
 	private String name;
-	private String path;
-	private byte[] content;
+	private String fullPath;
 
 	public File() {
 	}
@@ -20,19 +19,12 @@ public class File {
 		this.name = name;
 	}
 
-	public String getPath() {
-		return path;
+	public String getFullPath() {
+		return fullPath;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setFullPath(String path) {
+		this.fullPath = path;
 	}
 
-	public byte[] getContent() {
-		return content;
-	}
-
-	public void setContent(byte[] content) {
-		this.content = content;
-	}
 }
