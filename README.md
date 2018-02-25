@@ -6,27 +6,27 @@ This implementation should allow the management of up to an order of 10^14 files
 of bits to use from the filename hashcode in the distribution of slaves is increased. </br>
 Ex: DistributedMachineAllocator.getInstance().setNbBitsMask(val)
 ## Endpoints
-###Create operation
+###Create operation</br>
 Method: POST</br>
 URL: /api/v1/files</br>
 BODY: {"file":{"name":"filecreatedfrompostmanclient"}, "content":"asdadsadasda"}</br>
-###Read operation
+###Read operation</br>
 Method: GET</br>
 URL: /api/v1/files/{filename}</br>
 BODY: </br>
-###Update operation
+###Update operation</br>
 Method: PUT</br>
 URL: /api/v1/files/{filename}</br>
 BODY: {"file":{"name":"filecreatedfromclient"}, "content":"1311"}</br>
-###Delete operation
+###Delete operation</br>
 Method: DELETE</br>
 URL: /api/v1/files/{filename}</br>
 BODY: </br>
-###Enumerate operation
+###Enumerate operation</br>
 Method: GET</br>
 URL: /api/v1/files/find/{searchWord}</br>
 BODY: </br>
-###Size operation
+###Size operation</br>
 Method: GET</br>
 URL: /api/v1/files/size</br>
 BODY: </br>
