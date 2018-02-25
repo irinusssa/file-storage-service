@@ -4,14 +4,20 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.home.assignment.domain.File;
 import com.home.assignment.domain.FileWithContent;
+import com.home.assignment.exception.FileStorageException;
+import com.home.assignment.service.validator.FileValidatorService;
 
 @Component
 public class FileStorageService {
 
+	@Autowired
+	private FileValidatorService fileValidator;
+	
 	private DistributedMachineAllocator allocator = new DistributedMachineAllocator(16);
 
 	@PostConstruct
@@ -23,7 +29,8 @@ public class FileStorageService {
 		return allocator.values();
 	}
 
-	public File create(FileWithContent file) {
+	public File create(FileWithContent file) throws FileStorageException {
+		fileValidator.isValid(file, allocator);
 		return allocator.put(file.getFile().getName(), file);
 	}
 
@@ -31,7 +38,11 @@ public class FileStorageService {
 		return allocator.get(name);
 	}
 
-	public File update(String name, FileWithContent file) {
+	public File update(String name, FileWithContent file) throws FileStorageException {
+		if (file.getFile().getName() == null) {
+			file.getFile().setName(name);
+		}
+		fileValidator.isValid(file, allocator);
 		return allocator.put(name, file);
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.home.assignment.domain.File;
 import com.home.assignment.domain.FileWithContent;
+import com.home.assignment.exception.FileStorageException;
 import com.home.assignment.service.FileStorageService;
 
 @RestController
@@ -27,7 +28,7 @@ public class FileStorageController {
 	}
 
 	@RequestMapping(value = "files", method = RequestMethod.POST)
-	public File create(@RequestBody FileWithContent file) {
+	public File create(@RequestBody FileWithContent file) throws FileStorageException {
 		System.out.println("***********************POST name*******************************");
 		return service.create(file);
 	}
@@ -39,7 +40,7 @@ public class FileStorageController {
 	}
 
 	@RequestMapping(value = "files/{name}", method = RequestMethod.PUT)
-	public File update(@PathVariable String name, @RequestBody FileWithContent file) {
+	public File update(@PathVariable String name, @RequestBody FileWithContent file) throws FileStorageException {
 		return service.update(name, file);
 	}
 

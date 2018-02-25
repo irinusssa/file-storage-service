@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.home.assignment.domain.DistributedMachine;
-import com.home.assignment.domain.File;
 import com.home.assignment.domain.FileWithContent;
 import com.home.assignment.service.DistributedMachineAllocator;
 
@@ -20,17 +19,14 @@ public class AppTest {
 	public void initStorage() {
 		allocator = new DistributedMachineAllocator(16);
 
-		String fileName = null;
 		String fileName2 = "9c087d18-f9dd-4470-a4b3-526d08b655fb";
-		FileWithContent file = new FileWithContent();
-		file.setContent("aaaa".getBytes());
-		file.setFile(new File(fileName2));
+		FileWithContent file = FileWithContent.build(fileName2, "aaaa".getBytes());
 		allocator.put(fileName2, file);
 
-		for (int i = 1; i <= 1000000; i++) {
+		String fileName = null;
+		for (int i = 1; i <= 10; i++) {/* change to 1000000 to better test the distribution*/
 			fileName = UUID.randomUUID().toString();
-			file = new FileWithContent();
-			file.setFile(new File(fileName));
+			file = FileWithContent.build(fileName, null);
 			allocator.put(fileName, file);
 		}
 
@@ -38,17 +34,17 @@ public class AppTest {
 		allocator.remove("67da1d7f-d82b-45e8-8f51-5f2c2d1cd43b");
 	}
 
-	// @Test
+	@Test
 	public void displayFileDistribution() {
 		allocator.displayDistribution();
 	}
 
-	// @Test
+	@Test
 	public void displayFileNames() {
 		allocator.displayValues();
 	}
 
-	// @Test
+	@Test
 	public void testDistribution() {
 		long sum = 0;
 		for (Integer hash : allocator.getSlaves().keySet()) {
@@ -58,7 +54,7 @@ public class AppTest {
 		assertEquals(allocator.getTotalNbFiles(), sum);
 	}
 
-	 @Test
+	@Test
 	public void testFileNumbering() {
 		DistributedMachine machine;
 		long sum = 0;

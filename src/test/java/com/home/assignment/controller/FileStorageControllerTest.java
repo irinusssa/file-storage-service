@@ -20,7 +20,7 @@ public class FileStorageControllerTest {
 	
 	private static final String ROOT_URL = "http://localhost:8080/api/v1/";
 
-	@Test
+	//@Test
 	public void testRead() throws JsonProcessingException, IOException {
 		TestRestTemplate restTemplate = new TestRestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(ROOT_URL + "files", String.class);

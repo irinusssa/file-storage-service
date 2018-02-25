@@ -20,4 +20,11 @@ public class FileWithContent {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
+	
+	public static FileWithContent build(String name, byte[] content) {
+		FileWithContent result = new FileWithContent();
+		result.setContent(content);
+		result.setFile(new File(name));
+		return result;
+	}
 }

@@ -17,9 +17,6 @@ public class DistributedMachine {
 
 	public File put(String name, FileWithContent file) {
 		file.getFile().setFullPath(findFullPath(name));
-		if (file.getFile().getName() == null) {
-			file.getFile().setName(name);
-		}
 		File result = storage.put(name, file);
 		nbFiles++;
 		return result;
