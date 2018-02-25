@@ -53,7 +53,6 @@ public class FileValidatorService {
 				|| file.getFile().getName().isEmpty()) {
 			messageSB.append(FILE_OR_FILENAME_ARE_MISSING);
 		} else {
-			allocator.displayValues();
 			FileWithContent existing = allocator.get(file.getFile().getName());
 			if (existing == null) {
 				messageSB.append(NO_SUCH_FILENAME);

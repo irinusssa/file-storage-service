@@ -1,32 +1,91 @@
 package com.home.assignment.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.IOException;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.home.assignment.FileStorageTestSuite;
+import com.home.assignment.domain.File;
+import com.home.assignment.domain.FileWithContent;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public class FileStorageControllerIntegrationTest {
-	
-	private static final String ROOT_URL = "http://localhost:8080/api/v1/";
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class FileStorageControllerIntegrationTest extends FileStorageTestSuite {
 
-	//@Test
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	private static final String ROOT_URL = "/api/v1/";
+	private String fileName = "9c087d18-f9dd-4470-a4b3-526d08b655fb";
+	private String fileNameToDelete = "0eea2aea-eb81-4c3d-9fd1-673ebae3d7e2";
+
+	@Test
 	public void testRead() throws JsonProcessingException, IOException {
-		TestRestTemplate restTemplate = new TestRestTemplate();
-		ResponseEntity<String> response = restTemplate.getForEntity(ROOT_URL + "files", String.class);
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode responseJson = objectMapper.readTree(response.getBody());
-		
-		System.out.println(responseJson.toString());
+		ResponseEntity<FileWithContent> response = restTemplate.getForEntity(ROOT_URL + "/files/" + fileName,
+				FileWithContent.class);
+
+		// allocator.displayValues();
+
+		FileWithContent result = (FileWithContent) response.getBody();
+
+		assertEquals(result.getFile().getName(), fileName);
+	}
+
+	@Test
+	public void testCreate() throws JsonProcessingException, IOException {
+		String tempName = "newFile";
+		FileWithContent toSave = FileWithContent.build(tempName, "222".getBytes());
+		ResponseEntity<File> response = restTemplate.postForEntity(ROOT_URL + "/files/", toSave, File.class);
+
+		// allocator.displayValues();
+
+		File result = (File) response.getBody();
+
+		assertEquals(result.getName(), tempName);
+	}
+
+	@Test
+	public void testUpdate() throws JsonProcessingException, IOException {
+		ResponseEntity<FileWithContent> response = restTemplate.getForEntity(ROOT_URL + "/files/" + fileName,
+				FileWithContent.class);
+		FileWithContent oldFile = (FileWithContent) response.getBody();
+
+		FileWithContent toUpdate = FileWithContent.build(fileName, "222".getBytes());
+		restTemplate.put(ROOT_URL + "/files/" + fileName, toUpdate);
+
+		response = restTemplate.getForEntity(ROOT_URL + "/files/" + fileName, FileWithContent.class);
+		FileWithContent newFile = (FileWithContent) response.getBody();
+
+		assertNotNull(oldFile);
+		assertNotNull(newFile);
+		assertNotEquals(oldFile, newFile);
+	}
+
+	@Test
+	public void testDelete() throws JsonProcessingException, IOException {
+		ResponseEntity<FileWithContent> response = restTemplate.getForEntity(ROOT_URL + "/files/" + fileNameToDelete,
+				FileWithContent.class);
+		FileWithContent file = (FileWithContent) response.getBody();
+		assertNotNull(file);
+
+		restTemplate.delete(ROOT_URL + "/files/" + fileNameToDelete);
+
+		response = restTemplate.getForEntity(ROOT_URL + "/files/" + fileNameToDelete, FileWithContent.class);
+		file = (FileWithContent) response.getBody();
+		assertNull(file);
 	}
 
 }

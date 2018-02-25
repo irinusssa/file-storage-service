@@ -19,7 +19,10 @@ public class FileStorage {
 
 	public FileWithContent get(String name) {
 		File file = files.get(name);
-		FileWithContent result = fsAccess.retrieveFromFileSystem(file);
+		FileWithContent result = null;
+		if (file != null) {
+			result = fsAccess.retrieveFromFileSystem(file);
+		}
 		return result;
 	}
 

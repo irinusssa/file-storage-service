@@ -2,30 +2,15 @@ package com.home.assignment.service.validator;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import com.home.assignment.FileStorageTestSuite;
 import com.home.assignment.domain.FileWithContent;
 import com.home.assignment.exception.FileStorageException;
-import com.home.assignment.service.DistributedMachineAllocator;
 
-public class FileValidatorServiceTest {
+public class FileValidatorServiceTest extends FileStorageTestSuite {
 
-	DistributedMachineAllocator allocator;
 	FileValidatorService validator = new FileValidatorService();
-
-	@Before
-	public void initStorage() {
-		allocator = new DistributedMachineAllocator(16);
-
-		String fileName = "67da1d7f-d82b-45e8-8f51-5f2c2d1cd43b";
-		FileWithContent file = FileWithContent.build(fileName, "aaaa".getBytes());
-		allocator.put(fileName, file);
-
-		String fileName2 = "9c087d18-f9dd-4470-a4b3-526d08b655fb";
-		FileWithContent file2 = FileWithContent.build(fileName2, "aaaa".getBytes());
-		allocator.put(fileName2, file2);
-	}
 
 	@Test
 	public void testFileValidCreation() throws FileStorageException {

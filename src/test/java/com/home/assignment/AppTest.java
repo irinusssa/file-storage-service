@@ -2,37 +2,11 @@ package com.home.assignment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.UUID;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import com.home.assignment.domain.DistributedMachine;
-import com.home.assignment.domain.FileWithContent;
-import com.home.assignment.service.DistributedMachineAllocator;
 
-public class AppTest {
-
-	DistributedMachineAllocator allocator;
-
-	@Before
-	public void initStorage() {
-		allocator = new DistributedMachineAllocator(16);
-
-		String fileName2 = "9c087d18-f9dd-4470-a4b3-526d08b655fb";
-		FileWithContent file = FileWithContent.build(fileName2, "aaaa".getBytes());
-		allocator.put(fileName2, file);
-
-		String fileName = null;
-		for (int i = 1; i <= 10; i++) {/* change to 1000000 to better test the distribution*/
-			fileName = UUID.randomUUID().toString();
-			file = FileWithContent.build(fileName, null);
-			allocator.put(fileName, file);
-		}
-
-		allocator.remove(fileName);
-		allocator.remove("67da1d7f-d82b-45e8-8f51-5f2c2d1cd43b");
-	}
+public class AppTest extends FileStorageTestSuite {
 
 	@Test
 	public void displayFileDistribution() {
@@ -61,6 +35,12 @@ public class AppTest {
 		for (Integer hash : allocator.getSlaves().keySet()) {
 			machine = allocator.getSlaves().get(hash);
 			sum += machine.getNbFiles();
+			/*if (machine.getNbFiles() != machine.getStorage().getFiles().values().size()) {
+				System.out.println("hash = " + hash + "; nbFiles = " + machine.getNbFiles() + "; actual_values = "
+						+ machine.getStorage().getFiles().values().size());
+				allocator.displayValues();
+				return;
+			}*/
 			assertEquals(machine.getNbFiles(), machine.getStorage().getFiles().values().size());
 		}
 

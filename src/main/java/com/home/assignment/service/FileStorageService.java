@@ -2,8 +2,6 @@ package com.home.assignment.service;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +16,12 @@ public class FileStorageService {
 	@Autowired
 	private FileValidatorService fileValidator;
 	
-	private DistributedMachineAllocator allocator = new DistributedMachineAllocator(16);
+	private DistributedMachineAllocator allocator = DistributedMachineAllocator.getInstance();
 
-	@PostConstruct
+	/*@PostConstruct
 	public void init() {
 		MockDataGenerator.initData(allocator);
-	}
+	}*/
 
 	public List<File> enumerate(String searchWord) {
 		return allocator.values();
@@ -31,7 +29,7 @@ public class FileStorageService {
 
 	public File create(FileWithContent file) throws FileStorageException {
 		fileValidator.isValidForCreation(file, allocator);
-		return allocator.put(file.getFile().getName(), file);
+		return allocator.put(file.getFile().getName(), file, true);
 	}
 
 	public FileWithContent read(String name) {
@@ -43,7 +41,7 @@ public class FileStorageService {
 			file.getFile().setName(name);
 		}
 		fileValidator.isValidForModification(file, allocator);
-		return allocator.put(name, file);
+		return allocator.put(name, file, false);
 	}
 
 	public void delete(String name) {

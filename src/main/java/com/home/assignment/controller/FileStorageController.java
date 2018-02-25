@@ -23,25 +23,22 @@ public class FileStorageController {
 
 	@RequestMapping(value = "files/find/{searchWord}", method = RequestMethod.GET)
 	public List<File> enumerate(@PathVariable String searchWord) {
-		System.out.println("***********************GET enumerate searchWord*******************************");
 		return service.enumerate(searchWord);
 	}
 
 	@RequestMapping(value = "files", method = RequestMethod.POST)
 	public File create(@RequestBody FileWithContent file) throws FileStorageException {
-		System.out.println("***********************POST name*******************************");
 		return service.create(file);
 	}
 
 	@RequestMapping(value = "files/{name}", method = RequestMethod.GET)
 	public FileWithContent read(@PathVariable String name) {
-		System.out.println("***********************GET read name*******************************");
 		return service.read(name);
 	}
 
 	@RequestMapping(value = "files/{name}", method = RequestMethod.PUT)
-	public File update(@RequestBody FileWithContent file, @PathVariable String name) throws FileStorageException {
-		return service.update(name, file);
+	public void update(@RequestBody FileWithContent file, @PathVariable String name) throws FileStorageException {
+		service.update(name, file);
 	}
 
 	@RequestMapping(value = "files/{name}", method = RequestMethod.DELETE)

@@ -13,7 +13,7 @@ public class MockDataGenerator {
 			file = new FileWithContent();
 			fileName = UUID.randomUUID().toString();
 			file = FileWithContent.build(fileName, fileName.getBytes());
-			all.put(fileName, file);
+			all.put(fileName, file, true);
 		}
 	}
 

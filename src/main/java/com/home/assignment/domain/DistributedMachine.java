@@ -6,29 +6,31 @@ import java.util.Set;
 
 public class DistributedMachine {
 
-	private Integer machineCode;
+	private Integer code;
 	private int nbFiles = 0;
 	private FileStorage storage = new FileStorage();
 	private static final String ROOT = "C:\\temp\\fileStorage";
 
 	public DistributedMachine(Integer machineCode) {
-		this.machineCode = machineCode;
+		this.code = machineCode;
 	}
 
-	public File put(String name, FileWithContent file) {
+	public File put(String name, FileWithContent file, boolean isCreation) {
 		file.getFile().setFullPath(findFullPath(name));
 		File result = storage.put(name, file);
-		nbFiles++;
+		if (isCreation) {
+			nbFiles++;
+		}
 		return result;
 	}
 
 	private String findFullPath(String name) {
 		int mask = BigInteger.valueOf(2L).pow(8).intValue() - 1;;
 		int hash = name.hashCode();
-		int firstDir = (hash >> 16) & mask;
-		int secondDir = (hash >> 24) & mask;
-		return new StringBuilder(ROOT).append(java.io.File.separator).append(String.format("%03d", firstDir))
-				.append(java.io.File.separator).append(String.format("%03d", secondDir)).append(java.io.File.separator)
+		int parent = (hash >> 16) & mask;
+		int folder = (hash >> 24) & mask;
+		return new StringBuilder(ROOT).append(java.io.File.separator).append(String.format("%03d", parent))
+				.append(java.io.File.separator).append(String.format("%03d", folder)).append(java.io.File.separator)
 				.append(name).toString();
 	}
 
@@ -59,8 +61,8 @@ public class DistributedMachine {
 		return nbFiles;
 	}
 
-	public Integer getMachineCode() {
-		return machineCode;
+	public Integer getCode() {
+		return code;
 	}
 
 	public FileStorage getStorage() {
