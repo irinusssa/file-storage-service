@@ -28,20 +28,28 @@ public class FileValidatorServiceTest {
 	}
 
 	@Test
-	public void testFileValid() throws FileStorageException {
+	public void testFileValidCreation() throws FileStorageException {
 		String filename = "0Very_legal-filen3me";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
-		assertEquals(true, validator.isValid(file, allocator));
+		assertEquals(true, validator.isValidForCreation(file, allocator));
+	}
+	
+	@Test
+	public void testFileValidModification() throws FileStorageException {
+		String filename = "67da1d7f-d82b-45e8-8f51-5f2c2d1cd43b";
+		FileWithContent file = FileWithContent.build(filename, "bbbb".getBytes());
+
+		assertEquals(true, validator.isValidForModification(file, allocator));
 	}
 
 	@Test
-	public void testFileNamePattern_spaces() {
+	public void testFileNamePatternCreation_spaces() {
 		String filename = "illegal filename _Contains spaces";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
 		try {
-			validator.isValid(file, allocator);
+			validator.isValidForCreation(file, allocator);
 			assertEquals(true, false);
 		} catch (FileStorageException e) {
 			assertEquals(FileValidatorService.CHARACTER_NOT_ALLOWED, e.getMessage());
@@ -49,12 +57,12 @@ public class FileValidatorServiceTest {
 	}
 
 	@Test
-	public void testFileNamePattern_otherIllegalChars() {
+	public void testFileNamePatternCreation_otherIllegalChars() {
 		String filename = "0110 ill.egal filename _Contains !# bad Stuff @";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
 		try {
-			validator.isValid(file, allocator);
+			validator.isValidForCreation(file, allocator);
 			assertEquals(true, false);
 		} catch (FileStorageException e) {
 			assertEquals(FileValidatorService.CHARACTER_NOT_ALLOWED, e.getMessage());
@@ -62,12 +70,12 @@ public class FileValidatorServiceTest {
 	}
 
 	@Test
-	public void testFileNameLength_moreThanAllowed() {
+	public void testFileNameLengthCreation_moreThanAllowed() {
 		String filename = "0110Very_legal-filen3me_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
 		try {
-			validator.isValid(file, allocator);
+			validator.isValidForCreation(file, allocator);
 			assertEquals(true, false);
 		} catch (FileStorageException e) {
 			assertEquals(FileValidatorService.FILENAME_LENGHT_TOO_BIG, e.getMessage());
@@ -75,12 +83,25 @@ public class FileValidatorServiceTest {
 	}
 
 	@Test
-	public void testFileName_missing() {
+	public void testFileNameCreation_missing() {
 		String filename = "";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
 		try {
-			validator.isValid(file, allocator);
+			validator.isValidForCreation(file, allocator);
+			assertEquals(true, false);
+		} catch (FileStorageException e) {
+			assertEquals(FileValidatorService.FILE_OR_FILENAME_ARE_MISSING, e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testFileNameModification_missing() {
+		String filename = "";
+		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
+
+		try {
+			validator.isValidForModification(file, allocator);
 			assertEquals(true, false);
 		} catch (FileStorageException e) {
 			assertEquals(FileValidatorService.FILE_OR_FILENAME_ARE_MISSING, e.getMessage());
@@ -88,15 +109,28 @@ public class FileValidatorServiceTest {
 	}
 
 	@Test
-	public void testFileName_alreadyExists() {
+	public void testFileNameCreation_alreadyExists() {
 		String filename = "67da1d7f-d82b-45e8-8f51-5f2c2d1cd43b";
 		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
 
 		try {
-			validator.isValid(file, allocator);
+			validator.isValidForCreation(file, allocator);
 			assertEquals(true, false);
 		} catch (FileStorageException e) {
 			assertEquals(FileValidatorService.FILENAME_DUPLICATE, e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testFileNameModification_doesNotExist() {
+		String filename = "0110 ill.egal filename _Contains !# bad Stuff @";
+		FileWithContent file = FileWithContent.build(filename, "aaaa".getBytes());
+
+		try {
+			validator.isValidForModification(file, allocator);
+			assertEquals(true, false);
+		} catch (FileStorageException e) {
+			assertEquals(FileValidatorService.NO_SUCH_FILENAME, e.getMessage());
 		}
 	}
 

@@ -15,22 +15,48 @@ public class FileValidatorService {
 	public static final String FILENAME_LENGHT_TOO_BIG = "Filename length must be at most " + FILENAME_MAX_LENGTH
 			+ " characters\n";
 	public static final String FILENAME_DUPLICATE = "Filename already exists\n";
+	public static final String NO_SUCH_FILENAME = "File does not exist\n";
 
-	public boolean isValid(FileWithContent file, DistributedMachineAllocator allocator) throws FileStorageException {
+	public boolean isValidForCreation(FileWithContent file, DistributedMachineAllocator allocator)
+			throws FileStorageException {
 		StringBuilder messageSB = new StringBuilder();
 		String regex = "[\\w-]*";
 
 		if (file == null || file.getFile() == null || file.getFile().getName() == null
 				|| file.getFile().getName().isEmpty()) {
 			messageSB.append(FILE_OR_FILENAME_ARE_MISSING);
-		} else if (file.getFile().getName().length() > FILENAME_MAX_LENGTH) {
-			messageSB.append(FILENAME_LENGHT_TOO_BIG);
-		} else if (!file.getFile().getName().matches(regex)) {
-			messageSB.append(CHARACTER_NOT_ALLOWED);
 		} else {
+			if (file.getFile().getName().length() > FILENAME_MAX_LENGTH) {
+				messageSB.append(FILENAME_LENGHT_TOO_BIG);
+			}
+			if (!file.getFile().getName().matches(regex)) {
+				messageSB.append(CHARACTER_NOT_ALLOWED);
+			}
 			FileWithContent existing = allocator.get(file.getFile().getName());
 			if (existing != null) {
 				messageSB.append(FILENAME_DUPLICATE);
+			}
+		}
+
+		if (messageSB.length() > 0) {
+			throw new FileStorageException(messageSB.toString());
+		}
+
+		return true;
+	}
+
+	public boolean isValidForModification(FileWithContent file, DistributedMachineAllocator allocator)
+			throws FileStorageException {
+		StringBuilder messageSB = new StringBuilder();
+
+		if (file == null || file.getFile() == null || file.getFile().getName() == null
+				|| file.getFile().getName().isEmpty()) {
+			messageSB.append(FILE_OR_FILENAME_ARE_MISSING);
+		} else {
+			allocator.displayValues();
+			FileWithContent existing = allocator.get(file.getFile().getName());
+			if (existing == null) {
+				messageSB.append(NO_SUCH_FILENAME);
 			}
 		}
 

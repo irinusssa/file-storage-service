@@ -30,7 +30,7 @@ public class FileStorageService {
 	}
 
 	public File create(FileWithContent file) throws FileStorageException {
-		fileValidator.isValid(file, allocator);
+		fileValidator.isValidForCreation(file, allocator);
 		return allocator.put(file.getFile().getName(), file);
 	}
 
@@ -42,7 +42,7 @@ public class FileStorageService {
 		if (file.getFile().getName() == null) {
 			file.getFile().setName(name);
 		}
-		fileValidator.isValid(file, allocator);
+		fileValidator.isValidForModification(file, allocator);
 		return allocator.put(name, file);
 	}
 

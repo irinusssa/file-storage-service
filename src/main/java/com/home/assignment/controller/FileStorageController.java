@@ -21,8 +21,8 @@ public class FileStorageController {
 	@Autowired
 	private FileStorageService service;
 
-	@RequestMapping(value = "files", method = RequestMethod.GET)
-	public List<File> enumerate(String searchWord) {
+	@RequestMapping(value = "files/find/{searchWord}", method = RequestMethod.GET)
+	public List<File> enumerate(@PathVariable String searchWord) {
 		System.out.println("***********************GET enumerate searchWord*******************************");
 		return service.enumerate(searchWord);
 	}
@@ -40,7 +40,7 @@ public class FileStorageController {
 	}
 
 	@RequestMapping(value = "files/{name}", method = RequestMethod.PUT)
-	public File update(@PathVariable String name, @RequestBody FileWithContent file) throws FileStorageException {
+	public File update(@RequestBody FileWithContent file, @PathVariable String name) throws FileStorageException {
 		return service.update(name, file);
 	}
 
