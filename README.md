@@ -40,7 +40,7 @@ BODY: </br>
 - use a configuration file to collect all needed configurations (folder where to store the files on the fs, ...)
 - serialize the structure that keeps the file names in memory so that in case of jvm stop, we don't loose the references to the files
 - have separate services that run on different machines to keep the file names list and store the files on disk. </br>
-In the current implementation this is simulated by the DistributedMachine class
+In the current implementation this is simulated by the DistributedMachine instances
 - dinamically scale for the slave machines and for the file structure. In theory this implementation </br>
 should allow scaling for slaves by changing the number of bits to use from the filename hashcode when </br>
 distributing the "work" to slaves. Ex: DistributedMachineAllocator.getInstance().setNbBitsMask(val)
