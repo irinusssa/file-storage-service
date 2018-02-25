@@ -31,7 +31,7 @@ Method: GET</br>
 URL: /api/v1/files/size</br>
 BODY: </br>
 ## Testing
-! running the tests will actually create a file structure on the file system (12 files of ~36 bytes)</br>
+! running the tests will actually create a file structure on the file system (12 files of ~36 bytes each)</br>
 ! the files are created in the root of the working directory. To change the location, edit the constant DistributedMachine.ROOT</br>
 - The tests in the package <i>com.home.assignment.controller</i> are integration tests </br>
 - The tests in the other packages are unit tests</br>
