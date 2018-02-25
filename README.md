@@ -32,9 +32,12 @@ URL: /api/v1/files/size</br>
 BODY: </br>
 ## Testing
 ! running the tests will actually create a file structure on the file system (12 files of ~36 bytes)</br>
-The tests in the package <i>com.home.assignment.controller</i> are integration tests </br>
-The tests in the other packages are unit tests
+! the files are created in the root of the working directory. To change the location, edit the constant DistributedMachine.ROOT</br>
+- The tests in the package <i>com.home.assignment.controller</i> are integration tests </br>
+- The tests in the other packages are unit tests</br>
+- All tests use the same file directory structure on the disk as the working server
 ## Possible improvements
+- use a configuration file to collect all needed configurations (folder where to store the files on the fs, ...)
 - serialize the structure that keeps the file names in memory so that in case of jvm stop, we don't loose the references to the files
 - have separate services that run on different machines to keep the file names list and store the files on disk. </br>
 In the current implementation this is simulated by the DistributedMachine class
