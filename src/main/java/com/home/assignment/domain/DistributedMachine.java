@@ -1,7 +1,9 @@
 package com.home.assignment.domain;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public class DistributedMachine {
@@ -9,10 +11,20 @@ public class DistributedMachine {
 	private Integer code;
 	private int nbFiles = 0;
 	private FileStorage storage = new FileStorage();
-	private static final String ROOT = "C:\\temp\\fileStorage";
+	private static final String ROOT = "\\temp\\fileStorage";
 
 	public DistributedMachine(Integer machineCode) {
 		this.code = machineCode;
+	}
+
+	public List<File> search(String searchWord) {
+		List<File> result = new ArrayList<File>();
+		for (File file : storage.values()) {
+			if (file.matchesPattern(searchWord)) {
+				result.add(file);
+			}
+		}
+		return result.size() == 0 ? new ArrayList<File>(0):result;
 	}
 
 	public File put(String name, FileWithContent file, boolean isCreation) {
@@ -25,7 +37,8 @@ public class DistributedMachine {
 	}
 
 	private String findFullPath(String name) {
-		int mask = BigInteger.valueOf(2L).pow(8).intValue() - 1;;
+		int mask = BigInteger.valueOf(2L).pow(8).intValue() - 1;
+		;
 		int hash = name.hashCode();
 		int parent = (hash >> 16) & mask;
 		int folder = (hash >> 24) & mask;

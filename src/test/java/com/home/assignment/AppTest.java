@@ -2,9 +2,12 @@ package com.home.assignment;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.home.assignment.domain.DistributedMachine;
+import com.home.assignment.domain.File;
 
 public class AppTest extends FileStorageTestSuite {
 
@@ -19,13 +22,11 @@ public class AppTest extends FileStorageTestSuite {
 	}
 
 	@Test
-	public void testDistribution() {
-		long sum = 0;
-		for (Integer hash : allocator.getSlaves().keySet()) {
-			sum += allocator.getSlaves().get(hash).getNbFiles();
-		}
+	public void testSearch() {
+		String pattern = ".*-4470-.*";
+		List<File> result = allocator.search(pattern);
 
-		assertEquals(allocator.getTotalNbFiles(), sum);
+		assertEquals(result.size(), 1);
 	}
 
 	@Test
@@ -35,12 +36,12 @@ public class AppTest extends FileStorageTestSuite {
 		for (Integer hash : allocator.getSlaves().keySet()) {
 			machine = allocator.getSlaves().get(hash);
 			sum += machine.getNbFiles();
-			/*if (machine.getNbFiles() != machine.getStorage().getFiles().values().size()) {
-				System.out.println("hash = " + hash + "; nbFiles = " + machine.getNbFiles() + "; actual_values = "
-						+ machine.getStorage().getFiles().values().size());
-				allocator.displayValues();
-				return;
-			}*/
+			/*
+			 * if (machine.getNbFiles() != machine.getStorage().getFiles().values().size())
+			 * { System.out.println("hash = " + hash + "; nbFiles = " + machine.getNbFiles()
+			 * + "; actual_values = " + machine.getStorage().getFiles().values().size());
+			 * allocator.displayValues(); return; }
+			 */
 			assertEquals(machine.getNbFiles(), machine.getStorage().getFiles().values().size());
 		}
 

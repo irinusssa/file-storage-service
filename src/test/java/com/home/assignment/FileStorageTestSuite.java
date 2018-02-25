@@ -10,6 +10,7 @@ import com.home.assignment.service.DistributedMachineAllocator;
 public class FileStorageTestSuite {
 	
 	public DistributedMachineAllocator allocator = DistributedMachineAllocator.getInstance();
+	public Long initialStorageSize;
 	private static boolean initDone = false;
 	
 	@Before
@@ -23,11 +24,12 @@ public class FileStorageTestSuite {
 			FileWithContent file2 = FileWithContent.build(fileName2, "aaaa".getBytes());
 			allocator.put(fileName2, file2, true);
 
+			int testBatch = 10; /* change to 1000000 to better test the distribution */
 			String fileName3 = null;
-			for (int i = 1; i <= 10; i++) {/* change to 1000000 to better test the distribution */
+			for (int i = 1; i <= testBatch; i++) {
 				fileName3 = UUID.randomUUID().toString();
-				file = FileWithContent.build(fileName3, null);
-				allocator.put(fileName3, file, true);
+				FileWithContent file3 = FileWithContent.build(fileName3, fileName3.getBytes());
+				allocator.put(fileName3, file3, true);
 			}
 			
 			String fileName4 = "0eea2aea-eb81-4c3d-9fd1-673ebae3d7e2";
@@ -36,6 +38,7 @@ public class FileStorageTestSuite {
 
 			allocator.remove(fileName3);
 			
+			initialStorageSize = allocator.getTotalNbFiles();
 			FileStorageTestSuite.initDone = true;
 		}
 	}

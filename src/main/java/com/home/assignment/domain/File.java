@@ -12,6 +12,10 @@ public class File {
 		this.name = name;
 	}
 
+	public boolean matchesPattern(String pattern) {
+		return this.getName().matches(pattern);
+	}
+	
 	public String getName() {
 		return name;
 	}

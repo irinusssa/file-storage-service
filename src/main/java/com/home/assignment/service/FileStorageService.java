@@ -24,7 +24,7 @@ public class FileStorageService {
 	}*/
 
 	public List<File> enumerate(String searchWord) {
-		return allocator.values();
+		return allocator.search(searchWord);
 	}
 
 	public File create(FileWithContent file) throws FileStorageException {

@@ -48,6 +48,16 @@ public class DistributedMachineAllocator implements Serializable {
 		return instance;
 	}
 
+	public List<File> search(String searchWord) {
+		List<File> result = new ArrayList<File>();
+		DistributedMachine machine = null;
+		for (Integer hash : slaves.keySet()) {
+			machine = slaves.get(hash);
+			result.addAll(machine.search(searchWord));
+		}
+		return result;
+	}
+	
 	public File put(String name, FileWithContent file, boolean isCreation) {
 		int hash = name.hashCode();
 		int key = hash & mask;
