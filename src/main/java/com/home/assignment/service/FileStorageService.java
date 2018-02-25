@@ -15,13 +15,8 @@ public class FileStorageService {
 
 	@Autowired
 	private FileValidatorService fileValidator;
-	
-	private DistributedMachineAllocator allocator = DistributedMachineAllocator.getInstance();
 
-	/*@PostConstruct
-	public void init() {
-		MockDataGenerator.initData(allocator);
-	}*/
+	private DistributedMachineAllocator allocator = DistributedMachineAllocator.getInstance();
 
 	public List<File> enumerate(String searchWord) {
 		return allocator.search(searchWord);
